@@ -1,26 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   server.c                                           :+:    :+:            */
+/*   utilities.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: vvan-der <vvan-der@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/07/04 13:18:39 by vvan-der      #+#    #+#                 */
-/*   Updated: 2023/07/28 13:02:18 by vvan-der      ########   odam.nl         */
+/*   Created: 2023/07/28 13:01:33 by vvan-der      #+#    #+#                 */
+/*   Updated: 2023/07/28 13:01:54 by vvan-der      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	signal_handler(int signal)
+void	ft_exit(void)
 {
-}
-
-int	main(void)
-{
-	int	i;
-
-	i = 0;
-	if (ft_printf("%d\n", getpid()) == 1)
-		return (1);
+	ft_putendl_fd("Error", STDERR_FILENO);
+	exit(EXIT_FAILURE);
 }

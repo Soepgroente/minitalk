@@ -2,7 +2,7 @@ NAME1	= client
 NAME2	= server
 CC		= gcc
 RM		= rm -rf
-CFLAGS	= -Wextra -Wall -Werror -Ofast -flto #-fsanitize=address
+CFLAGS	= -Wextra -Wall -Werror#-g3 -fsanitize=address
 LIBFT	= libft
 OBJDIR	= Miniobjs
 
@@ -18,7 +18,7 @@ $(LIBFT):
 	git submodule init
 	git submodule update
 
-$(LIBFT)/$(LIBFT).a: $(LIBFT)
+$(LIBFT)/$(LIBFT).a:
 	$(MAKE) -C $(LIBFT)
 
 $(OBJDIR)/%.o : %.c
@@ -27,7 +27,7 @@ $(OBJDIR)/%.o : %.c
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
-$(NAME1): $(OBJDIR) $(OBJS1) $(LIBFT)/$(LIBFT).a 
+$(NAME1): $(LIBFT) $(OBJDIR) $(OBJS1) $(LIBFT)/$(LIBFT).a 
 	$(CC) $(CFLAGS) $(OBJS1) $(LIBFT)/$(LIBFT).a -o $(NAME1)
 
 $(NAME2): $(OBJDIR) $(OBJS2) $(LIBFT)/$(LIBFT).a 
