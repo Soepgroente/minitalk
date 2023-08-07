@@ -6,65 +6,86 @@
 /*   By: vvan-der <vvan-der@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 13:24:23 by vvan-der      #+#    #+#                 */
-/*   Updated: 2023/08/07 11:11:17 by vvan-der      ########   odam.nl         */
+/*   Updated: 2023/08/07 21:41:29 by vvan-der      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int	signal_num;
+bool	ready_to_send;
 
-static void	signal_handler(int signal, siginfo_t *info, void *context)
+static void	confirm_signal(int signal)
 {
-	
 	if (signal == SIGUSR1)
-		return (true);
-	else
-		return (false);
+		ready_to_send = true;
 }
 
-static void	send_signal(int signal, siginfo_t *info, void *context)
+static int	send_signal(char c, pid_t server_id, int *x, int *i)
 {
-	context = NULL;
-	if (signal_num == 0)
-		kill(info->si_pid, SIGUSR1);
-	else if (signal_num == 1)
-		kill(info->si_pid, SIGUSR2);
+	int	error_check;
+
+	ready_to_send = false;
+	if (((c >> *x) & 1) == 0)
+		error_check = kill(server_id, SIGUSR1);
+	else
+		error_check = kill(server_id, SIGUSR2);
+	if (error_check == -1)
+	{
+		ft_printf("Signal failed to send\n");
+		return (-1);
+	}
+	(*x)++;
+	if (*x == 8)
+	{
+		*x = 0;
+		(*i)++;
+	}
+	return (0);
+}
+
+static int	wait_for_reply(void)
+{
+	int	i;
+
+	i = 0;
+	while (1)
+	{
+		if (ready_to_send == true)
+			return (0);
+		usleep(10);
+		i++;
+		if (i == 100000)
+			break ;
+	}
+	ft_printf("Server did not respond\n");
+	return (-1);
 }
 
 int	main(int argc, char **argv)
 {
-	int					i;
-	pid_t				server_id;
-	pid_t				client_id;
-	struct sigaction	sa;
-	bool				ready_to_send;
+	int		i;
+	int		x;
+	pid_t	server_id;
+	pid_t	client_id;
 
 	i = 0;
-	signal_num = 0;
+	x = 0; 
 	if (argc != 3)
 	{
 		ft_printf("Input error. Input server PID and a string to send.\n");
 		return (1);
 	}
+	ready_to_send = true;
 	client_id = getpid();
 	server_id = ft_atoi(argv[1]);
 	if (server_id <= 0)
-	{
-		ft_printf("Invalid server id\n");
-		return (1);
-	}
-	sa.sa_flags = SA_RESTART | SA_SIGINFO;
-	sa.sa_handler = SIG_IGN;
-	sa.sa_sigaction = send_signal;
-	sigaction(SIGUSR1, &sa, &ready_to_send);
+		return (ft_printf("Invalid server id\n"), 1);
+	signal(SIGUSR1, &confirm_signal);
 	while (argv[2][i])
 	{
-		if (ready_to_send == true)
-		{
-			send_signal(argv[2][i], server_id);
-			i++;
-			ready_to_send = false;
-		}
+		if (send_signal(argv[2][i], server_id, &x, &i) == -1)
+			return (1);
+		if (wait_for_reply() == -1)
+			return (1);
 	}
 }

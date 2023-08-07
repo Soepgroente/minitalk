@@ -2,7 +2,7 @@ NAME1	= client
 NAME2	= server
 CC		= gcc
 RM		= rm -rf
-CFLAGS	= -Wextra -Wall -Werror#-g3 -fsanitize=address
+CFLAGS	= -Wextra -Wall -Werror #-g3 -fsanitize=address
 LIBFT	= libft
 OBJDIR	= Miniobjs
 
