@@ -6,7 +6,7 @@
 /*   By: vvan-der <vvan-der@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 13:20:16 by vvan-der      #+#    #+#                 */
-/*   Updated: 2023/07/28 13:02:09 by vvan-der      ########   odam.nl         */
+/*   Updated: 2023/08/08 16:35:23 by vvan-der      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@
 # include <sys/types.h>
 # include <signal.h>
 # include "libft/libft.h"
+
+typedef struct	s_data
+{
+	int		i;
+	int		bit;
+	char	*msg;
+	int		size;
+	bool	ready_to_send;
+	char	c;
+}	t_data;
 
 void	ft_exit(void);
 

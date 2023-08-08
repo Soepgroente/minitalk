@@ -12,14 +12,17 @@ SRC2	= server.c utilities.c
 OBJS1	= $(SRC1:%.c=$(OBJDIR)/%.o)
 OBJS2	= $(SRC2:%.c=$(OBJDIR)/%.o)
 
-all: $(NAME1) $(NAME2)
+all: build_lib $(NAME1) $(NAME2)
+
+build_lib: $(LIBFT)
+	$(MAKE) -C $(LIBFT)
 
 $(LIBFT):
 	git submodule init
 	git submodule update
 
-$(LIBFT)/$(LIBFT).a: $(LIBFT)
-	$(MAKE) -C $(LIBFT)
+#$(LIBFT)/$(LIBFT).a: $(LIBFT)
+#	$(MAKE) -C $(LIBFT)
 
 $(OBJDIR)/%.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $^
@@ -27,10 +30,10 @@ $(OBJDIR)/%.o : %.c
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
-$(NAME1): $(LIBFT)/$(LIBFT).a $(OBJDIR) $(OBJS1) 
+$(NAME1): $(OBJDIR) $(OBJS1)
 	$(CC) $(CFLAGS) $(LIBFT)/$(LIBFT).a $(OBJS1) -o $(NAME1)
 
-$(NAME2): $(LIBFT)/$(LIBFT).a $(OBJDIR) $(OBJS2)
+$(NAME2): $(OBJDIR) $(OBJS2)
 	$(CC) $(CFLAGS) $(LIBFT)/$(LIBFT).a $(OBJS2) -o $(NAME2)
 
 clean:
@@ -44,4 +47,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all, clean, fclean, re
+.PHONY: all, clean, fclean, re, build_lib
