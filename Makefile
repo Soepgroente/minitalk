@@ -6,23 +6,20 @@ CFLAGS	= -Wextra -Wall -Werror #-g3 -fsanitize=address
 LIBFT	= libft
 OBJDIR	= Miniobjs
 
-SRC1	= client.c utilities.c
-SRC2	= server.c utilities.c
+SRC1	= client.c
+SRC2	= server.c
 
 OBJS1	= $(SRC1:%.c=$(OBJDIR)/%.o)
 OBJS2	= $(SRC2:%.c=$(OBJDIR)/%.o)
 
 all: build_lib $(NAME1) $(NAME2)
 
-build_lib: $(LIBFT)
+build_lib: $(LIBFT)/Makefile
 	$(MAKE) -C $(LIBFT)
 
-$(LIBFT):
+$(LIBFT)/Makefile:
 	git submodule init
 	git submodule update
-
-#$(LIBFT)/$(LIBFT).a: $(LIBFT)
-#	$(MAKE) -C $(LIBFT)
 
 $(OBJDIR)/%.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $^
