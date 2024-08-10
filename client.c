@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   client.c                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: vvan-der <vvan-der@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/07/04 13:24:23 by vvan-der      #+#    #+#                 */
-/*   Updated: 2023/08/08 17:18:52 by vvan-der      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soepgroente <soepgroente@student.42.fr>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/04 13:24:23 by vvan-der          #+#    #+#             */
+/*   Updated: 2023/12/25 14:36:59 by soepgroente      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	wait_for_reply(void)
 		if (i == 100000)
 			break ;
 	}
-	ft_printf("Server did not respond\n");
+	printf("Server did not respond\n");
 	return (-1);
 }
 
@@ -49,7 +49,7 @@ static int	send_signal(char c, pid_t server_id, int *x, int *i)
 		error_check = kill(server_id, SIGUSR2);
 	if (error_check == -1)
 	{
-		ft_printf("Signal failed to send\n");
+		printf("Signal failed to send\n");
 		return (-1);
 	}
 	(*x)++;
@@ -66,17 +66,15 @@ int	main(int argc, char **argv)
 	int		i;
 	int		x;
 	pid_t	server_id;
-	pid_t	client_id;
 
 	i = 0;
 	x = 0; 
 	if (argc != 3)
-		return (ft_printf("Input server PID and a string to send.\n"), 1);
+		return (printf("Input server PID and a string to send.\n"), 1);
 	g_ready_to_send = true;
-	client_id = getpid();
 	server_id = ft_atoi(argv[1]);
 	if (server_id <= 0)
-		return (ft_printf("Invalid server id\n"), 1);
+		return (printf("Invalid server id\n"), 1);
 	signal(SIGUSR1, &confirm_signal);
 	while (argv[2][i])
 	{
